@@ -1,44 +1,55 @@
 extends Node2D
 
-var noise = preload("res://scripts/softnoise.gd")
-var block = preload("res://instances/block.tscn")
-var background = preload("res://instances/background.tscn")
+export var seed_str = "zickles_"
+
+var noise = preload("res://scripts/noise.gd").Noise.new(seed_str)
+var block_scene = preload("res://instances/block.tscn")
+var blockbg_scene = preload("res://instances/blockbg.tscn")
 
 enum {
 	STONE, MOSS
 }
 
-var world_depth = 64
-var world_height = 64
-var cave_level = 64
-var chunk_width = 32
-var world_seed = 12345
+var index: int
+var cave_depth = 16
+var tunnel_depth = 112
 
-func _ready():
-	var softnoise = noise.SoftNoise.new(get_node(".").world_seed)
+var world_depth = 128
+
+func _ready(): 
+	var chunk_width = get_node("..").chunk_width
 	for x in range(0, chunk_width):
-		for y in range(-world_height, world_depth):
-			create_background(Vector2(x*16, y*16), STONE)
-		
-		var cave_floor_y = floor(softnoise.openSimplex2D((get_global_transform().origin.x/16 + x)*.02, 0)*cave_level*.2)
-		create_block(Vector2(x*16, cave_floor_y*16), MOSS)
-		var cave_ceil_y = floor(softnoise.openSimplex2D((get_global_transform().origin.x/16 + x)*.05, 0)*10) - 20
-		create_block(Vector2(x*16, cave_ceil_y*16), STONE)
-		
-		for y in range(cave_floor_y + 1, world_depth):
-			create_block(Vector2(x*16, y*16), STONE)
-		
-		for y in range(-world_height, cave_ceil_y):
-			create_block(Vector2(x*16, y*16), STONE)
+		for y in range(0, world_depth):
+			create_blockbg(Vector2(x*16, y*16), STONE)
+			if y < cave_depth:
+				# y = 0 to 15
+				create_block(Vector2(x*16, y*16), STONE)
+			elif y >= cave_depth and y < tunnel_depth:
+				# y = 16 to 111
+				if y < 32:
+					# y = 16 to 31
+					var cutoff = 1.033 - 0.033 * (y-15)
+					if noise.value_noise_2D((index*chunk_width + x) / 10.0, y / 10.0) < cutoff:
+						create_block(Vector2(x*16, y*16), MOSS)
+				elif y > 95:
+					# y = 96 to 111
+					var cutoff = 0.033 * (y - 80) - 0.033
+					if noise.value_noise_2D((index*chunk_width + x) / 10.0, y / 10.0) < cutoff:
+						create_block(Vector2(x*16, y*16), MOSS)
+				else:
+					if noise.value_noise_2D((index*chunk_width + x) / 10.0, y / 10.0) < 0.5:
+						create_block(Vector2(x*16, y*16), STONE)
+			elif y >= tunnel_depth:
+				create_block(Vector2(x*16, y*16), STONE)
 
 func create_block(pos, type):
-	var new_block = block.instance()
+	var new_block = block_scene.instance()
 	new_block.translate(pos)
 	new_block.block_type = type
 	add_child(new_block)
 
-func create_background(pos, type):
-	var new_background = background.instance()
-	new_background.translate(pos)
-	new_background.background_type = type
-	add_child(new_background)
+func create_blockbg(pos, type):
+	var new_blockbg = blockbg_scene.instance()
+	new_blockbg.translate(pos)
+	new_blockbg.blockbg_type = type
+	add_child(new_blockbg)
