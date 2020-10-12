@@ -17,9 +17,9 @@ func _process(delta):
 		translate(Vector2(speed, 0))
 	if Input.is_action_pressed("zoom_in"):
 		speed = clamp(speed - .25, 4, 50)
-		$camera.zoom.x = clamp($camera.zoom.x - .05, .1, 10)
-		$camera.zoom.y = clamp($camera.zoom.y - .05, .1, 10)
+		$Camera.zoom.x = clamp($Camera.zoom.x - .05, .1, 10)
+		$Camera.zoom.y = clamp($Camera.zoom.y - .05, .1, 10)
 	if Input.is_action_pressed("zoom_out"):
 		speed = clamp(speed + .25, 4, 50)
-		$camera.zoom.x = clamp($camera.zoom.x + .05, .1, 10)
-		$camera.zoom.y = clamp($camera.zoom.y + .05, .1, 10)
+		$Camera.zoom.x = clamp($Camera.zoom.x + .05, .1, 10)
+		$Camera.zoom.y = clamp($Camera.zoom.y + .05, .1, 10)

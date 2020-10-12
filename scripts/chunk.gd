@@ -3,8 +3,7 @@ extends Node2D
 export var seed_str = "spurples"
 
 var noise = preload("res://scripts/noise.gd").Noise.new(seed_str)
-var block_scene = preload("res://instances/block.tscn")
-var background_scene = preload("res://instances/background.tscn")
+var background_scene = preload("res://instances/Background.tscn")
 
 enum {
 	STONE, MOSS
@@ -23,30 +22,27 @@ func _ready():
 		for y in range(0, world_depth):
 			if y < cave_depth:
 				# y = 0 to 15
-				create_block(Vector2(x*16, y*16), STONE)
+				create_tile(x, y, STONE)
 			elif y >= cave_depth and y < tunnel_depth:
 				# y = 16 to 111
 				if y < 32:
 					# y = 16 to 31
-					var cutoff = 1.033 - 0.033 * (y-15)
+					var cutoff = 1.033 - 0.033 * (y - 15)
 					if noise.value_noise_2D((index*width + x) / 10.0, y / 10.0) < cutoff:
-						create_block(Vector2(x*16, y*16), MOSS)
+						create_tile(x, y, MOSS)
 				elif y > 95:
 					# y = 96 to 111
 					var cutoff = 0.033 * (y - 80) - 0.033
 					if noise.value_noise_2D((index*width + x) / 10.0, y / 10.0) < cutoff:
-						create_block(Vector2(x*16, y*16), MOSS)
+						create_tile(x, y, MOSS)
 				else:
 					if noise.value_noise_2D((index*width + x) / 10.0, y / 10.0) < 0.5:
-						create_block(Vector2(x*16, y*16), STONE)
+						create_tile(x, y, STONE)
 			elif y >= tunnel_depth:
-				create_block(Vector2(x*16, y*16), STONE)
+				create_tile(x, y, STONE)
 
-func create_block(pos, type):
-	var new_block = block_scene.instance()
-	new_block.translate(pos)
-	new_block.block_type = type
-	add_child(new_block)
+func create_tile(x, y, type):
+	$TileMap.set_cell(x, y, type)
 
 func create_background(width, height, type):
 	var new_background = background_scene.instance()

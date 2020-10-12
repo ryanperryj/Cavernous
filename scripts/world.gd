@@ -1,9 +1,9 @@
 extends Node2D
 
-var chunk = preload("res://instances/chunk.tscn")
+var chunk = preload("res://instances/Chunk.tscn")
 
 var chunk_width: int = 4
-export var load_distance: int = 12
+export var load_distance: int = 32
 var i_current_chunk: int
 var loaded_chunks = {}
 
@@ -17,7 +17,7 @@ func _ready():
 
 func _process(delta):
 	mutex.lock()
-	i_current_chunk = floor($player.position.x / (chunk_width*16.0))
+	i_current_chunk = floor($Player.position.x / (chunk_width*16.0))
 	mutex.unlock()
 
 func load_chunks_method(thread_running):
