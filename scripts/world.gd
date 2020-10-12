@@ -1,9 +1,9 @@
-extends WorldEnvironment
+extends Node2D
 
 var chunk = preload("res://instances/chunk.tscn")
 
-var chunk_width: int = 1
-export var load_distance: int = 64
+var chunk_width: int = 2
+export var load_distance: int = 16
 var current_chunk: int
 var loaded_chunks = {}
 
