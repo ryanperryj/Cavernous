@@ -66,6 +66,10 @@ zoom_out={
 
 limits/message_queue/max_size_kb=2048
 
+[network]
+
+limits/debugger_stdout/max_chars_per_second=4096
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

@@ -1,6 +1,6 @@
 extends Node2D
 
-export var seed_str = "zickles_"
+export var seed_str = "spurples"
 
 var noise = preload("res://scripts/noise.gd").Noise.new(seed_str)
 var block_scene = preload("res://instances/block.tscn")
