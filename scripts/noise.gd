@@ -5,20 +5,20 @@ class Noise:
 	func _init(seed_string):
 		seed_hash = seed_string.hash()
 	
-	func random_integer(lim_lower : int, lim_upper : int):
+	func random_integer(lim_lower: int, lim_upper: int):
 		# gives random integer in [lim_lower, lim_upper]
 		randomize()
 		return lim_lower + (randi() % (lim_upper - lim_lower + 1))
 	
-	func probability(chance : float):
+	func probability(chance: float):
 		# gives boolean true at the chance (where chance ={ [0, 1])
 		return chance*100 >= random_integer(1, 100)
 	
-	func random_2D(x : int, y : int) -> float:
+	func random_2D(x: int, y: int) -> float:
 		# standard "2D noise one-liner I found on the web"
 		return fposmod(sin(Vector2(x, y).dot(Vector2(12.9898, 78.233))) * 43758.5453 + seed_hash % 100000, 1)
 	
-	func perlin_noise_2D(x : float, y : float, octaves : int) -> float:
+	func perlin_noise_2D(x: float, y: float, octaves: int) -> float:
 		# perlin noise 2D with octaves loop
 		if octaves < 1:
 			return 0.0
@@ -66,7 +66,7 @@ class Noise:
 			
 		return final_val / normalize_fac
 	
-	func value_noise_2D(x : float, y : float) -> float:
+	func value_noise_2D(x: float, y: float) -> float:
 		var floor_x: int = floor(x)
 		var floor_y: int = floor(y)
 		var fract_x = x - floor_x
@@ -80,9 +80,3 @@ class Noise:
 		var bot_mix = lerp(bl, br, fract_x)
 		
 		return lerp(top_mix, bot_mix, fract_y)
-	
-	func perlin_worm_2D(pos: Vector2) -> Vector2:
-		var next_pos = Vector2.ZERO
-		next_pos.x = perlin_noise_2D(pos.x, 0.0, 1)
-		next_pos.y = perlin_noise_2D(0.0, pos.y, 1)
-		return next_pos

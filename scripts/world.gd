@@ -2,58 +2,59 @@ extends Node2D
 
 var chunk = preload("res://instances/Chunk.tscn")
 
-var chunk_width: int = 4
-export var load_distance: int = 32
-var i_current_chunk: int
+var chunk_size: int = 16
+export var load_distance: int = 4
+var ij_current_chunk: Vector2
 var loaded_chunks = {}
 
-var load_chunks_thread = Thread.new()
-var unload_chunks_thread = Thread.new()
-var mutex = Mutex.new()
-
 func _ready():
-	load_chunks_thread.start(self, "load_chunks_method", true)
-	unload_chunks_thread.start(self, "unload_chunks_method", true)
+	pass
 
 func _process(delta):
-	mutex.lock()
-	i_current_chunk = floor($Player.position.x / (chunk_width*16.0))
-	mutex.unlock()
-
-func load_chunks_method(thread_running):
-	while thread_running:
-		var i = i_current_chunk
-		if !loaded_chunks.has(i):
-			loaded_chunks[i] = chunk.instance()
-			loaded_chunks[i].index = i
-			loaded_chunks[i].translate(Vector2(i*chunk_width*16, 0))
-			call_deferred("add_child", (loaded_chunks[i]))
-		for i_relative in range(1, load_distance + 1):
-			i = i_current_chunk + i_relative
-			if !loaded_chunks.has(i):
-				loaded_chunks[i] = chunk.instance()
-				loaded_chunks[i].index = i
-				loaded_chunks[i].translate(Vector2(i*chunk_width*16, 0))
-				call_deferred("add_child", (loaded_chunks[i]))
-				
-			i = i_current_chunk - i_relative
-			if !loaded_chunks.has(i):
-				loaded_chunks[i] = chunk.instance()
-				loaded_chunks[i].index = i
-				loaded_chunks[i].translate(Vector2(i*chunk_width*16, 0))
-				call_deferred("add_child", (loaded_chunks[i]))
-
-func unload_chunks_method(thread_running):
-	while thread_running:
-		var i_left_chunk = i_current_chunk - load_distance - 1
-		if loaded_chunks.has(i_left_chunk):
-			loaded_chunks[i_left_chunk].queue_free()
-			loaded_chunks.erase(i_left_chunk)
-		
-		var i_right_chunk = i_current_chunk + load_distance + 1
-		if loaded_chunks.has(i_right_chunk):
-			loaded_chunks[i_right_chunk].queue_free()
-			loaded_chunks.erase(i_right_chunk)
+	ij_current_chunk = ($Player.position / (chunk_size*16.0)).floor()
+	# chunk loading
+	var t_start: float = OS.get_ticks_msec()
+	for i_relative in range(-load_distance, load_distance + 1):
+		for j_relative in range(-load_distance, load_distance + 1):
+			var ij = ij_current_chunk + Vector2(i_relative, j_relative)
+			if !loaded_chunks.has(ij):
+				loaded_chunks[ij] = chunk.instance()
+				loaded_chunks[ij].chunk_index = ij
+				loaded_chunks[ij].translate(ij*chunk_size*16)
+				call_deferred("add_child", (loaded_chunks[ij]))
+	print("chunk loading took: ", OS.get_ticks_msec() - t_start)
+	
+	# chunk unloading
+	t_start = OS.get_ticks_msec()
+	# top chunks
+	for i_relative in range(-load_distance - 1, load_distance + 1):			#     x x x x o
+		var ij = ij_current_chunk + Vector2(i_relative, -load_distance - 1)	#     o [   ] o
+		if loaded_chunks.has(ij):											#     o [   ] o
+			var chunk = loaded_chunks[ij]									#     o [   ] o
+			chunk.queue_free()												#     o o o o o
+			loaded_chunks.erase(ij)
+	# bottom chunks
+	for i_relative in range(-load_distance, load_distance + 2):				#     o o o o o
+		var ij = ij_current_chunk + Vector2(i_relative, load_distance + 1)	#     o [   ] o
+		if loaded_chunks.has(ij):											#     o [   ] o
+			var chunk = loaded_chunks[ij]									#     o [   ] o
+			chunk.queue_free()												#     o x x x x
+			loaded_chunks.erase(ij)
+	# right chunks
+	for j_relative in range(-load_distance - 1, load_distance + 1):			#     o o o o x
+		var ij = ij_current_chunk + Vector2(load_distance + 1, j_relative)	#     o [   ] x
+		if loaded_chunks.has(ij):											#     o [   ] x
+			var chunk = loaded_chunks[ij]									#     o [   ] o
+			chunk.queue_free()												#     o o o o o
+			loaded_chunks.erase(ij)
+	# left chunks
+	for j_relative in range(-load_distance , load_distance + 2):			#     o o o o o
+		var ij = ij_current_chunk + Vector2(-load_distance - 1, j_relative)	#     x [   ] o
+		if loaded_chunks.has(ij):											#     x [   ] o
+			var chunk = loaded_chunks[ij]									#     o [   ] o
+			chunk.queue_free()												#     x o o o o
+			loaded_chunks.erase(ij)
+	print("chunk unloading took: ", OS.get_ticks_msec() - t_start)
 
 func _input(event):
 	if event.is_action_released("quit"):
