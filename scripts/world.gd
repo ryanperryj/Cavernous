@@ -1,60 +1,91 @@
 extends Node2D
 
-var chunk = preload("res://instances/Chunk.tscn")
+# TYPES
+# px: pixel
+# tl: tile
+# ch: chunk
 
-var chunk_size: int = 16
-export var load_distance: int = 4
-var ij_current_chunk: Vector2
-var loaded_chunks = {}
+# QUALIFIERS
+# cur: current
+# rel: relative
 
-func _ready():
-	pass
+# DATA
+# sz: size
+# pos: position
+# ptr: pointer
+# scn: scene
+
+# data_qualifier_type
+
+var scn_ch = preload("res://instances/Chunk.tscn")
+
+const sz_tl: int = 16        #px
+const sz_ch: int = 4         #tl
+const load_distance: int = 8 #ch
+
+var pos_curr_px: Vector2
+var pos_curr_tl: Vector2
+var pos_curr_ch: Vector2
+var pos_last_ch: Vector2
+
+var ch_loaded_ptr = {}
+var ch_is_generated = {}
+var tl_types = {}
 
 func _process(delta):
-	ij_current_chunk = ($Player.position / (chunk_size*16.0)).floor()
+	pos_curr_px = $Player.position.floor()
+	pos_curr_tl = (pos_curr_px / sz_tl).floor()
+	pos_curr_ch = (pos_curr_tl / sz_ch).floor()
+	
+	var row_text = ""
+	if tl_types.has(pos_curr_ch) and pos_curr_ch != pos_last_ch:
+		for y in range(sz_ch):
+			row_text = ""
+			for x in range(sz_ch):
+				row_text += str(tl_types[pos_curr_ch][y][x]) + "	"
+			print(row_text + "\n")
+		print("\n =========== \n")
+	pos_last_ch = pos_curr_ch
+	
 	# chunk loading
-	var t_start: float = OS.get_ticks_msec()
-	for i_relative in range(-load_distance, load_distance + 1):
-		for j_relative in range(-load_distance, load_distance + 1):
-			var ij = ij_current_chunk + Vector2(i_relative, j_relative)
-			if !loaded_chunks.has(ij):
-				loaded_chunks[ij] = chunk.instance()
-				loaded_chunks[ij].chunk_index = ij
-				loaded_chunks[ij].translate(ij*chunk_size*16)
-				call_deferred("add_child", (loaded_chunks[ij]))
-	print("chunk loading took: ", OS.get_ticks_msec() - t_start)
+	#var t_start: float = OS.get_ticks_msec()
+	for x in range(-load_distance, load_distance + 1):
+		for y in range(-load_distance, load_distance + 1):
+			var pos_ch = pos_curr_ch + Vector2(x, y)
+			if !ch_loaded_ptr.has(pos_ch):
+				ch_loaded_ptr[pos_ch] = scn_ch.instance()
+				ch_loaded_ptr[pos_ch].pos_ch = pos_ch
+				ch_loaded_ptr[pos_ch].translate(pos_ch*sz_ch*sz_tl)
+				call_deferred("add_child", (ch_loaded_ptr[pos_ch]))
+				ch_is_generated[pos_ch] = true
+				tl_types[pos_ch] = ch_loaded_ptr[pos_ch].tl_types
+	#print("chunk loading took: ", OS.get_ticks_msec() - t_start)
 	
 	# chunk unloading
-	t_start = OS.get_ticks_msec()
-	# top chunks
-	for i_relative in range(-load_distance - 1, load_distance + 1):			#     x x x x o
-		var ij = ij_current_chunk + Vector2(i_relative, -load_distance - 1)	#     o [   ] o
-		if loaded_chunks.has(ij):											#     o [   ] o
-			var chunk = loaded_chunks[ij]									#     o [   ] o
-			chunk.queue_free()												#     o o o o o
-			loaded_chunks.erase(ij)
-	# bottom chunks
-	for i_relative in range(-load_distance, load_distance + 2):				#     o o o o o
-		var ij = ij_current_chunk + Vector2(i_relative, load_distance + 1)	#     o [   ] o
-		if loaded_chunks.has(ij):											#     o [   ] o
-			var chunk = loaded_chunks[ij]									#     o [   ] o
-			chunk.queue_free()												#     o x x x x
-			loaded_chunks.erase(ij)
-	# right chunks
-	for j_relative in range(-load_distance - 1, load_distance + 1):			#     o o o o x
-		var ij = ij_current_chunk + Vector2(load_distance + 1, j_relative)	#     o [   ] x
-		if loaded_chunks.has(ij):											#     o [   ] x
-			var chunk = loaded_chunks[ij]									#     o [   ] o
-			chunk.queue_free()												#     o o o o o
-			loaded_chunks.erase(ij)
-	# left chunks
-	for j_relative in range(-load_distance , load_distance + 2):			#     o o o o o
-		var ij = ij_current_chunk + Vector2(-load_distance - 1, j_relative)	#     x [   ] o
-		if loaded_chunks.has(ij):											#     x [   ] o
-			var chunk = loaded_chunks[ij]									#     o [   ] o
-			chunk.queue_free()												#     x o o o o
-			loaded_chunks.erase(ij)
-	print("chunk unloading took: ", OS.get_ticks_msec() - t_start)
+	#t_start = OS.get_ticks_msec()
+	for x in range(-load_distance - 1, load_distance + 2):
+		for y in range(-load_distance - 1, load_distance + 2):
+			if x == -load_distance - 1 or x == load_distance + 1 or y == -load_distance - 1 or y == load_distance + 1:
+				var pos_ch = pos_curr_ch + Vector2(x, y)
+				if ch_loaded_ptr.has(pos_ch):
+					ch_loaded_ptr[pos_ch].queue_free()
+					ch_loaded_ptr.erase(pos_ch)
+	#print("chunk unloading took: ", OS.get_ticks_msec() - t_start)
+
+func get_tile_type(pos_tl: Vector2) -> int:
+	var pos_ch = (pos_tl / sz_ch).floor()
+	var pos_tl_rel_ch = pos_tl - pos_ch*sz_ch
+	
+	if tl_types.has(pos_ch):
+		return tl_types[pos_ch][pos_tl_rel_ch]
+	else:
+		return -2
+
+func load_chunk():
+	pass
+
+func generate_chunk():
+	pass
 
 func _input(event):
 	if event.is_action_released("quit"):

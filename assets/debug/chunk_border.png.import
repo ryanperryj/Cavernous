@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/stone.png-6e9ec358ad1df9f1a2d8dc98ed29767b.stex"
+path="res://.import/chunk_border.png-378ba4eea46faa1b125d40f0df8c2963.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/block/stone.png"
-dest_files=[ "res://.import/stone.png-6e9ec358ad1df9f1a2d8dc98ed29767b.stex" ]
+source_file="res://assets/debug/chunk_border.png"
+dest_files=[ "res://.import/chunk_border.png-378ba4eea46faa1b125d40f0df8c2963.stex" ]
 
 [params]
 

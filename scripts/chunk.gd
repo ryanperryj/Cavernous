@@ -5,23 +5,45 @@ export var seed_str = "spurples"
 var noise = preload("res://scripts/noise.gd").Noise.new(seed_str)
 var background_scene = preload("res://instances/Background.tscn")
 
+var AIR = -1
+
 enum {
-	STONE, MOSS
+	STONE, MOSS,
 }
 
-var chunk_index: Vector2
+enum {
+	STONE_BG,
+}
+
+var pos_ch: Vector2
+var sz_ch: int
 var cave_depth = 16
 var tunnel_depth = 112
-
 var world_depth = 128
 
+var tl_types = []
+
 func _ready(): 
-	var chunk_size = get_node("..").chunk_size
-	create_background(chunk_size, chunk_size, STONE)
-	for x in range(0, chunk_size):
-		for y in range(0, chunk_size):
-			var x_global = chunk_index.x*chunk_size + x
-			var y_global = chunk_index.y*chunk_size + y
+	sz_ch = get_node("..").sz_ch
+	
+	# draw chunk border
+	$Ch_Border_Sprite.scale = Vector2(sz_ch, sz_ch)
+	
+	# init tile_data array
+	var c = 0 ; var r = 0
+	while c < sz_ch:
+		tl_types.append([])
+		r = 0
+		while r < sz_ch:
+			tl_types[c].append(-1)
+			r += 1
+		c += 1
+	
+	create_background(sz_ch, sz_ch, STONE_BG)
+	for x in range(sz_ch):
+		for y in range(sz_ch):
+			var x_global = pos_ch.x*sz_ch + x
+			var y_global = pos_ch.y*sz_ch + y
 			# top layer of solid stone
 			if y_global < cave_depth:
 				# y = 0 to 15
@@ -49,6 +71,7 @@ func _ready():
 
 func create_tile(x, y, type):
 	$TileMap.set_cell(x, y, type)
+	tl_types[y][x] = type
 
 func create_background(width, height, type):
 	var new_background = background_scene.instance()
