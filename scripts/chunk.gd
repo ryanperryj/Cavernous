@@ -1,9 +1,7 @@
 extends Node2D
 
-export var seed_str = "spurples"
-
-var noise = preload("res://scripts/noise.gd").Noise.new(seed_str)
-var background_scene = preload("res://instances/Background.tscn")
+var noise_scr = preload("res://scripts/noise.gd")
+var background_scn = preload("res://instances/Background.tscn")
 
 var AIR = -1
 
@@ -24,10 +22,12 @@ var world_depth = 128
 var tl_types = []
 
 func _ready(): 
+	var noise = noise_scr.Noise.new(get_node("..").seed_str)
+	
 	sz_ch = get_node("..").sz_ch
 	
 	# draw chunk border
-	$Ch_Border_Sprite.scale = Vector2(sz_ch, sz_ch)
+	$Ch_Border_Sprite.scale = Vector2(sz_ch/4.0, sz_ch/4.0)
 	
 	# init tile_data array
 	var c = 0 ; var r = 0
@@ -45,7 +45,7 @@ func _ready():
 			var x_global = pos_ch.x*sz_ch + x
 			var y_global = pos_ch.y*sz_ch + y
 			# top layer of solid stone
-			if y_global < cave_depth:
+			if  y_global < cave_depth:
 				# y = 0 to 15
 				create_tile(x, y, STONE)
 			# cave layer
@@ -74,7 +74,7 @@ func create_tile(x, y, type):
 	tl_types[y][x] = type
 
 func create_background(width, height, type):
-	var new_background = background_scene.instance()
+	var new_background = background_scn.instance()
 	new_background.background_type = type
 	new_background.width = width*16
 	new_background.height = height*16

@@ -16,7 +16,7 @@ class Noise:
 	
 	func random_2D(x: int, y: int) -> float:
 		# standard "2D noise one-liner I found on the web"
-		return fposmod(sin(Vector2(x, y).dot(Vector2(12.9898, 78.233))) * 43758.5453 + seed_hash % 100000, 1)
+		return fposmod(sin(Vector2(x, y).dot(Vector2(12.9898, 78.233))) * (43758.5453 + seed_hash % 100000), 1)
 	
 	func perlin_noise_2D(x: float, y: float, octaves: int) -> float:
 		# perlin noise 2D with octaves loop
