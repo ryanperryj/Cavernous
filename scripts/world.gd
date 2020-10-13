@@ -95,3 +95,5 @@ func _input(event):
 		get_tree().quit()
 	if event.is_action_released("reload"):
 		get_tree().reload_current_scene()
+	if event.is_action_released("enable_debug"):
+		pass
