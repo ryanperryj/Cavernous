@@ -1,25 +1,29 @@
-extends Node2D
+extends KinematicBody2D
 
-var speed = 10.0
-var input_vec = Vector2.ZERO
+var ACCELERATION = 16*500
+var FRICTION = 16*750
+var MAX_SPEED = 16*50
+var input_vector = Vector2.ZERO
+var velocity = Vector2.ZERO
 
 func _ready():
 	set_process(true)
 
-func _process(delta):
-	if Input.is_action_pressed("up"):
-		translate(Vector2(0, -speed))
-	if Input.is_action_pressed("down"):
-		translate(Vector2(0, speed))
-	if Input.is_action_pressed("left"):
-		translate(Vector2(-speed, 0))
-	if Input.is_action_pressed("right"):
-		translate(Vector2(speed, 0))
+func _physics_process(delta):
+	input_vector.x = Input.get_action_strength("right") - Input.get_action_strength("left")
+	input_vector.y = Input.get_action_strength("down") - Input.get_action_strength("up")
+	input_vector = input_vector.normalized()
+	
+	if input_vector != Vector2.ZERO:
+		velocity = velocity.move_toward(MAX_SPEED * input_vector, ACCELERATION * delta)
+	else:
+		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
+	
+	velocity = move_and_slide(velocity)
+	
 	if Input.is_action_pressed("zoom_in"):
-		speed = clamp(speed - .25, 4, 50)
 		$Camera.zoom.x = clamp($Camera.zoom.x - .05, .1, 10)
 		$Camera.zoom.y = clamp($Camera.zoom.y - .05, .1, 10)
 	if Input.is_action_pressed("zoom_out"):
-		speed = clamp(speed + .25, 4, 50)
 		$Camera.zoom.x = clamp($Camera.zoom.x + .05, .1, 10)
 		$Camera.zoom.y = clamp($Camera.zoom.y + .05, .1, 10)

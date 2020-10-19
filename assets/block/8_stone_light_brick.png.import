@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/stone_bg.png-4b178e8ba4bec414b0157ee547fd0111.stex"
+path="res://.import/8_stone_light_brick.png-b0755c13e632e6371a71c9e2736b3dbc.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/background/stone_bg.png"
-dest_files=[ "res://.import/stone_bg.png-4b178e8ba4bec414b0157ee547fd0111.stex" ]
+source_file="res://assets/block/8_stone_light_brick.png"
+dest_files=[ "res://.import/8_stone_light_brick.png-b0755c13e632e6371a71c9e2736b3dbc.stex" ]
 
 [params]
 
@@ -19,7 +19,7 @@ compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
-flags/repeat=1
+flags/repeat=0
 flags/filter=false
 flags/mipmaps=false
 flags/anisotropic=false

@@ -5,19 +5,13 @@ class Noise:
 	func _init(seed_string):
 		seed_hash = seed_string.hash()
 	
-	func random_integer(lim_lower: int, lim_upper: int):
-		# gives random integer in [lim_lower, lim_upper]
-		randomize()
-		return lim_lower + (randi() % (lim_upper - lim_lower + 1))
-	
-	func probability(chance: float):
-		# gives boolean true at the chance (where chance ={ [0, 1])
-		return chance*100 >= random_integer(1, 100)
-	
 	func random_2D(x: int, y: int) -> float:
 		# standard "2D noise one-liner I found on the web"
 		return fposmod(sin(Vector2(x, y).dot(Vector2(12.9898, 78.233))) * (43758.5453 + seed_hash % 100000), 1)
 	
+	func random_1D(x: int) -> float:
+		return random_2D(x, x)
+
 	func perlin_noise_2D(x: float, y: float, octaves: int) -> float:
 		# perlin noise 2D with octaves loop
 		if octaves < 1:
@@ -80,3 +74,6 @@ class Noise:
 		var bot_mix = lerp(bl, br, fract_x)
 		
 		return lerp(top_mix, bot_mix, fract_y)
+	
+	func value_noise_1D(x: float) -> float:
+		return value_noise_2D(x, x)
