@@ -19,7 +19,7 @@ extends Node2D
 
 # data_qualifier_type
 
-var SAVE_PATH = "user://saves/world_" + str(Globals.world_num) + ".dat"
+var save_path = "user://saves/world_" + str(Globals.world_num) + ".dat"
 
 var scn_ch = preload("res://instances/Chunk.tscn")
 
@@ -50,17 +50,19 @@ func _ready():
 	# load world data
 	set_process(false)
 	var save_file = File.new()
-	if save_file.file_exists(SAVE_PATH):
-		var save_file_open_error = save_file.open(SAVE_PATH, File.READ)
+	if save_file.file_exists(save_path):
+		var save_file_open_error = save_file.open(save_path, File.READ)
 		# handle file opening error
 		if save_file_open_error != OK:
-			print("error at file open")
+			print("World: error at file open for loading")
 			get_tree().quit()
 		save_dict = save_file.get_var()
 		tl_types = save_dict["tl_types"]
 		Globals.world_seed_str = save_dict["world_seed_str"]
-		print("world loaded : seed = " + Globals.world_seed_str)
+		print("World: loaded ; world number = ", Globals.world_num, " ; seed string = ",  Globals.world_seed_str)
 		save_file.close()
+	else:
+		print("World: created ; world number = ", Globals.world_num, " ; seed string = ",  Globals.world_seed_str)
 	set_process(true)
 	
 	# generate debug overlay
@@ -132,28 +134,29 @@ func get_pos_curr(frame):
 			return pos_cur_ch
 	return Vector2.ZERO
 
+
 func _input(event):
-	if event.is_action_released("quit"):
-		get_tree().quit()
 	if event.is_action_released("reload"):
 		get_tree().reload_current_scene()
-	if event.is_action_pressed("save_game"):
-		var save_dir = Directory.new()
-		if !save_dir.dir_exists("user://saves/"):
-			save_dir.make_dir_recursive("user://saves/")
-		var save_file = File.new()
-		var save_file_open_error = save_file.open(SAVE_PATH, File.WRITE)
-		# handle file opening error
-		if save_file_open_error != OK:
-			print("error at file open")
-			get_tree().quit()
-		save_dict["tl_types"] = tl_types
-		save_dict["world_seed_str"] = Globals.world_seed_str
-		save_file.store_var(save_dict)
-		save_file.close()
-		print("world saved")
 	if event.is_action_pressed("break_tile"):
 		if ch_loaded_ptr.has(pos_sel_ch):
 			var pos_rel_tl = get_pos_rel_tile(pos_sel_tl)
 			ch_loaded_ptr[pos_sel_ch].get_node("TileMap").set_cell(pos_rel_tl.x, pos_rel_tl.y, -1)
 			tl_types[pos_sel_ch][pos_rel_tl] = -1
+
+
+func _on_Camera_save():
+	var save_dir = Directory.new()
+	if !save_dir.dir_exists("user://saves/"):
+		save_dir.make_dir_recursive("user://saves/")
+	var save_file = File.new()
+	var save_file_open_error = save_file.open(save_path, File.WRITE)
+	# handle file opening error
+	if save_file_open_error != OK:
+		print("World: error at file open for saving")
+		get_tree().quit()
+	save_dict["tl_types"] = tl_types
+	save_dict["world_seed_str"] = Globals.world_seed_str
+	save_file.store_var(save_dict)
+	save_file.close()
+	print("World: saved")

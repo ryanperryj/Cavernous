@@ -16,7 +16,3 @@ shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
-
-[node name="Camera" type="Camera2D" parent="."]
-current = true
-zoom = Vector2( 3, 3 )

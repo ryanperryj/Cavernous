@@ -20,10 +20,3 @@ func _physics_process(delta):
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta)
 	
 	velocity = move_and_slide(velocity)
-	
-	if Input.is_action_pressed("zoom_in"):
-		$Camera.zoom.x = clamp($Camera.zoom.x - .05, .1, 10)
-		$Camera.zoom.y = clamp($Camera.zoom.y - .05, .1, 10)
-	if Input.is_action_pressed("zoom_out"):
-		$Camera.zoom.x = clamp($Camera.zoom.x + .05, .1, 10)
-		$Camera.zoom.y = clamp($Camera.zoom.y + .05, .1, 10)
