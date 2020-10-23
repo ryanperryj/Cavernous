@@ -19,10 +19,7 @@ extends Node2D
 
 # data_qualifier_type
 
-const world_num: int = 1
-
-const SAVE_DIR = "user://saves/"
-const SAVE_PATH = "user://saves/world_" + str(world_num) + ".dat"
+var SAVE_PATH = "user://saves/world_" + str(Globals.world_num) + ".dat"
 
 var scn_ch = preload("res://instances/Chunk.tscn")
 
@@ -35,8 +32,6 @@ const sz_ch: int = 16			#tl
 const load_distance: int = 2	#ch
 const world_depth: int =  8		#ch
 
-export var seed_str = "oliver"
-
 var pos_cur_px: Vector2
 var pos_cur_tl: Vector2
 var pos_cur_ch: Vector2
@@ -47,6 +42,7 @@ var pos_sel_ch: Vector2
 
 var ch_loaded_ptr = {}
 var tl_types = {}
+var save_dict = {}
 
 var world_done_loading = false
 
@@ -60,8 +56,10 @@ func _ready():
 		if save_file_open_error != OK:
 			print("error at file open")
 			get_tree().quit()
-		tl_types = save_file.get_var()
-		print("world loaded")
+		save_dict = save_file.get_var()
+		tl_types = save_dict["tl_types"]
+		Globals.world_seed_str = save_dict["world_seed_str"]
+		print("world loaded : seed = " + Globals.world_seed_str)
 		save_file.close()
 	set_process(true)
 	
@@ -98,7 +96,7 @@ func _process(delta):
 					ch_loaded_ptr[pos_ch].load_from_mem(sz_ch, tl_types[pos_ch])
 				# else, generate new chunk
 				else:
-					ch_loaded_ptr[pos_ch].generate(sz_ch, seed_str)
+					ch_loaded_ptr[pos_ch].generate(sz_ch)
 					tl_types[pos_ch] = ch_loaded_ptr[pos_ch].tl_types
 				call_deferred("add_child", (ch_loaded_ptr[pos_ch]))
 	
@@ -141,15 +139,17 @@ func _input(event):
 		get_tree().reload_current_scene()
 	if event.is_action_pressed("save_game"):
 		var save_dir = Directory.new()
-		if !save_dir.dir_exists(SAVE_DIR):
-			save_dir.make_dir_recursive(SAVE_DIR)
+		if !save_dir.dir_exists("user://saves/"):
+			save_dir.make_dir_recursive("user://saves/")
 		var save_file = File.new()
 		var save_file_open_error = save_file.open(SAVE_PATH, File.WRITE)
 		# handle file opening error
 		if save_file_open_error != OK:
 			print("error at file open")
 			get_tree().quit()
-		save_file.store_var(tl_types)
+		save_dict["tl_types"] = tl_types
+		save_dict["world_seed_str"] = Globals.world_seed_str
+		save_file.store_var(save_dict)
 		save_file.close()
 		print("world saved")
 	if event.is_action_pressed("break_tile"):

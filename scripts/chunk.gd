@@ -28,8 +28,8 @@ func load_from_mem(sz_ch, tl_types_from_mem):
 		for y in range(sz_ch):
 			create_tile(x, y, tl_types_from_mem[Vector2(x, y)])
 
-func generate(sz_ch, seed_str):
-	var noise = noise_scr.Noise.new(seed_str)
+func generate(sz_ch):
+	var noise = noise_scr.Noise.new(Globals.world_seed_str)
 	# generate solid ground
 	for x in range(sz_ch):
 		for y in range(sz_ch):
