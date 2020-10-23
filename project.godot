@@ -15,7 +15,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Deep Dark"
+config/name="Cavernous"
 run/main_scene="res://ui/Title.tscn"
 config/icon="res://icon.png"
 
