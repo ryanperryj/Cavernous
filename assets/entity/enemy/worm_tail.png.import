@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/worm_head.png-9df4bae0bb1159e81a11b551ad16b396.stex"
+path="res://.import/worm_tail.png-aa33c252970c189acf662146ce60d841.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/entity/enemies/worm_head.png"
-dest_files=[ "res://.import/worm_head.png-9df4bae0bb1159e81a11b551ad16b396.stex" ]
+source_file="res://assets/entity/enemy/worm_tail.png"
+dest_files=[ "res://.import/worm_tail.png-aa33c252970c189acf662146ce60d841.stex" ]
 
 [params]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/termole.png-e13a471ddaacca47d7af36b0ca346888.stex"
+path="res://.import/termole.png-57d1622a59662821e7dc524cf578beb4.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/entity/enemies/termole.png"
-dest_files=[ "res://.import/termole.png-e13a471ddaacca47d7af36b0ca346888.stex" ]
+source_file="res://assets/entity/enemy/termole.png"
+dest_files=[ "res://.import/termole.png-57d1622a59662821e7dc524cf578beb4.stex" ]
 
 [params]
 
