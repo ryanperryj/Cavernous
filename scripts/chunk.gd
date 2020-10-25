@@ -15,27 +15,39 @@ enum {
 	DIRT_BG, STONE_DIRTY_BG, STONE_BG, STONE_DARK_BG, STONE_LIGHT_BG, 
 }
 
-var pos_ch: Vector2
+var ch_index: Vector2
 var sz_ch: int
 var cave_depth = 16
 var tunnel_depth = 112
 var world_depth = 128
 
-var tl_types = {}
+var tl_types = []
 
 func load_from_mem(sz_ch, tl_types_from_mem):
-	for x in range(sz_ch):
-		for y in range(sz_ch):
-			create_tile(x, y, tl_types_from_mem[Vector2(x, y)])
+	var x = 0
+	var y = 0
+	while x < sz_ch:
+		tl_types.append([])
+		y = 0
+		while y < sz_ch:
+			tl_types[x].append(AIR)
+			create_tile(x, y, tl_types_from_mem[x][y])
+			y += 1
+		x += 1
+
 
 func generate(sz_ch):
 	var noise = noise_scr.Noise.new(Globals.world_seed_str)
 	# generate solid ground
-	for x in range(sz_ch):
-		for y in range(sz_ch):
-			tl_types[Vector2(x, y)] = AIR
-			var x_global = pos_ch.x*sz_ch + x
-			var y_global = pos_ch.y*sz_ch + y
+	var x = 0
+	var y = 0
+	while x < sz_ch:
+		tl_types.append([])
+		y = 0
+		while y < sz_ch:
+			tl_types[x].append(AIR)
+			var x_global = ch_index.x*sz_ch + x
+			var y_global = ch_index.y*sz_ch + y
 			# top layer of solid stone
 			if  y_global < cave_depth - 3:
 				# y = 0 to 12
@@ -76,12 +88,17 @@ func generate(sz_ch):
 					# y = 96 to 127
 					create_background(sz_ch, sz_ch, STONE_DARK_BG)
 					create_tile(x, y, STONE_DARK)
+			y += 1
+		x += 1
 	
 	# generate caves
-	for x in range(sz_ch):
-		for y in range(sz_ch):
-			var x_global = pos_ch.x*sz_ch + x
-			var y_global = pos_ch.y*sz_ch + y
+	x = 0
+	y = 0
+	while x < sz_ch:
+		y = 0
+		while y < sz_ch:
+			var x_global = ch_index.x*sz_ch + x
+			var y_global = ch_index.y*sz_ch + y
 			if y_global >= cave_depth and  y_global < tunnel_depth:
 				# y = 16 to 111
 				if y_global < 32:
@@ -96,6 +113,9 @@ func generate(sz_ch):
 					# y = 96 to 111
 					if noise.value_noise_2D(x_global / 10.0, y_global / 10.0) > lerp(.5, 1, (y_global - 96)/(111 - 96)):
 						create_tile(x, y, AIR)
+			y += 1
+		x += 1
+
 
 func create_debug_overlay():
 	var scn_overlay = load("res://instances/Debug_Overlay_Chunk.tscn").instance()
@@ -106,7 +126,7 @@ func create_debug_overlay():
 
 func create_tile(x: int, y: int, type: int):
 	$TileMap.set_cell(x, y, type)
-	tl_types[Vector2(x, y)] = type
+	tl_types[x][y] = type
 
 func create_background(width, height, type):
 	return

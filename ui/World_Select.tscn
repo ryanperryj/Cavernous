@@ -1,16 +1,13 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://assets/ui/button_pressed.png" type="Texture" id=1]
 [ext_resource path="res://assets/ui/button_hovered.png" type="Texture" id=2]
 [ext_resource path="res://assets/ui/button.png" type="Texture" id=3]
-[ext_resource path="res://assets/fonts/retganon.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://assets/font/dynamic_font.tres" type="DynamicFont" id=4]
 [ext_resource path="res://scripts/world_select.gd" type="Script" id=5]
 [ext_resource path="res://assets/ui/sq_button.png" type="Texture" id=6]
 [ext_resource path="res://assets/ui/sq_button_hovered.png" type="Texture" id=7]
 [ext_resource path="res://assets/ui/sq_button_pressed.png" type="Texture" id=8]
-
-[sub_resource type="DynamicFont" id=1]
-font_data = ExtResource( 4 )
 
 [node name="World_Select" type="Control"]
 anchor_right = 1.0
@@ -46,7 +43,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="ColorRect/World1Button"]
 margin_right = 70.0
 margin_bottom = 16.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Empty"
 align = 1
@@ -73,7 +70,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="ColorRect/XWorld1Button"]
 margin_right = 16.0
 margin_bottom = 16.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "X"
 align = 1
@@ -98,7 +95,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="ColorRect/World2Button"]
 margin_right = 70.0
 margin_bottom = 16.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Empty"
 align = 1
@@ -125,7 +122,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="ColorRect/XWorld2Button"]
 margin_right = 16.0
 margin_bottom = 16.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "X"
 align = 1
@@ -150,7 +147,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="ColorRect/World3Button"]
 margin_right = 70.0
 margin_bottom = 16.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Empty"
 align = 1
@@ -177,7 +174,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="ColorRect/XWorld3Button"]
 margin_right = 16.0
 margin_bottom = 16.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "X"
 align = 1
@@ -202,7 +199,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="ColorRect/World4Button"]
 margin_right = 70.0
 margin_bottom = 16.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Empty"
 align = 1
@@ -229,7 +226,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="ColorRect/XWorld4Button"]
 margin_right = 16.0
 margin_bottom = 16.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "X"
 align = 1
@@ -254,7 +251,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="ColorRect/BackButton"]
 margin_right = 70.0
 margin_bottom = 16.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = ExtResource( 4 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Back"
 align = 1
