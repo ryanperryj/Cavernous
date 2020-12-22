@@ -1,5 +1,5 @@
 class Noise:
-
+	
 	var seed_hash : int 
 	
 	func _init(seed_string):
@@ -11,7 +11,7 @@ class Noise:
 	
 	func random_1D(x: int) -> float:
 		return random_2D(x, x)
-
+	
 	func perlin_noise_2D(x: float, y: float, octaves: int) -> float:
 		# perlin noise 2D with octaves loop
 		if octaves < 1:

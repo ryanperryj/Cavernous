@@ -23,6 +23,6 @@ func _process(delta):
 	
 	$Label.text = label_text
 
-func draw_chunk_border(sz_ch):
+func draw_chunk_border():
 	$Sprite.visible = true
-	$Sprite.scale = Vector2(sz_ch/4.0, sz_ch/4.0)
+	$Sprite.scale = Vector2(Globals.sz_ch/4.0, Globals.sz_ch/4.0)

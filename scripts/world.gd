@@ -5,8 +5,9 @@ extends Node2D
 # tl: tile
 # ch: chunk
 
-# QUALIFIERS
+# ADJECTIVES
 # cur: current
+# prev: previous
 # rel: relative
 # sel: selected
 
@@ -17,16 +18,18 @@ extends Node2D
 # scn: scene
 # scr: script
 
-# data_qualifier_type
-
 var save_path = "user://saves/world_" + str(Globals.world_num) + ".dat"
 
-var scn_ch = preload("res://instances/Chunk.tscn")
+var lighting_scr = preload("res://scripts/lighting.gd")
+var scn_ch = preload("res://scenes/Chunk.tscn")
 
-const sz_tl: int = 16			#px
-const sz_ch: int = 16			#tl
+var lighting = lighting_scr.Lighting.new()
+
 const load_distance: int = 2	#ch
 const world_depth: int =  8		#ch
+
+const sz_tl = Globals.sz_tl
+const sz_ch = Globals.sz_ch
 
 var cur_pos: Vector2
 var cur_tl: Vector2
@@ -37,10 +40,10 @@ var sel_tl: Vector2
 var sel_ch: Vector2
 
 var ch_loaded_ptr = {}
-var tl_types = {}
+
+var tl_type = {}
 
 var save_dict = {}
-
 var world_done_loading = false
 
 func _ready():
@@ -54,7 +57,7 @@ func _ready():
 			print("World: error at file open for loading")
 			get_tree().quit()
 		save_dict = save_file.get_var()
-		tl_types = save_dict["tl_types"]
+		tl_type = save_dict["tl_type"]
 		Globals.world_seed_str = save_dict["world_seed_str"]
 		print("World: loaded ; world number = ", Globals.world_num, " ; seed string = '",  Globals.world_seed_str, "'")
 		save_file.close()
@@ -64,16 +67,17 @@ func _ready():
 	
 	# generate debug overlay
 	var scn_overlay = load("res://scenes/Debug_Overlay.tscn").instance()
-	scn_overlay.add_stat("Player Position", self, "get_cur_pos", false, null)
-	scn_overlay.add_stat("Player Tile", self, "get_cur_tl", false, null)
-	scn_overlay.add_stat("Player Chunk", self, "get_cur_ch", false, null)
+	scn_overlay.add_stat("Player Position", self, "get_cur_pos", true)
+	scn_overlay.add_stat("Player Tile", self, "get_cur_tl", true)
+	scn_overlay.add_stat("Player Chunk", self, "get_cur_ch", true)
 	add_child(scn_overlay)
+
 
 func _process(delta):
 	cur_pos = $Player.position
 	cur_tl = (cur_pos / sz_tl).floor()
 	cur_ch = (cur_tl / sz_ch).floor()
-
+	
 	sel_pos = get_global_mouse_position()
 	sel_tl = (sel_pos / sz_tl).floor()
 	sel_ch = (sel_tl / sz_ch).floor()
@@ -91,22 +95,28 @@ func _process(delta):
 				ch_loaded_ptr[ch].ch_index = ch
 				ch_loaded_ptr[ch].translate(ch*sz_ch*sz_tl)
 				# load chunk if chunk has been generated before 
-				if tl_types.has(ch):
-					ch_loaded_ptr[ch].load_from_mem(sz_ch, tl_types[ch])
+				if tl_type.has(ch):
+					ch_loaded_ptr[ch].load_from_mem(tl_type[ch])
 				# else, generate new chunk
 				else:
-					ch_loaded_ptr[ch].generate(sz_ch)
-					tl_types[ch] = ch_loaded_ptr[ch].tl_types
+					ch_loaded_ptr[ch].generate()
+					tl_type[ch] = ch_loaded_ptr[ch].tl_type
+				# stuff we do whether it's new or not
+				ch_loaded_ptr[ch].get_node("Sprite").scale = Vector2((sz_ch*sz_tl)/512, (sz_ch*sz_tl)/512)
+				lighting.tl_color[ch] = ch_loaded_ptr[ch].tl_color
+				lighting.tl_is_light[ch] = ch_loaded_ptr[ch].tl_is_light
 				call_deferred("add_child", (ch_loaded_ptr[ch]))
 	
 	# unload chunks
-	for x in range(-load_distance - 1, load_distance + 2):
-		for y in range(-load_distance - 1, load_distance + 2):
-			if x == -load_distance - 1 or x == load_distance + 1 or y == -load_distance - 1 or y == load_distance + 1:
-				var ch = cur_ch + Vector2(x, y)
-				if ch_loaded_ptr.has(ch):
-					ch_loaded_ptr[ch].queue_free()
-					ch_loaded_ptr.erase(ch)
+	for ch in ch_loaded_ptr:
+		var rel_ch = cur_ch - ch
+		if rel_ch.x < -load_distance or rel_ch.x > load_distance or rel_ch.y < -load_distance or rel_ch.y > load_distance:
+			ch_loaded_ptr[ch].queue_free()
+			ch_loaded_ptr.erase(ch)
+			# also wipe secondary tile data (stuff that is determined in "chunk.create_tile" function)
+			lighting.tl_color.erase(ch)
+			lighting.tl_is_light.erase(ch)
+
 
 func get_cur_pos():
 	return cur_pos
@@ -126,8 +136,8 @@ func get_tl_type(tl: Vector2) -> int:
 	var ch = (tl / sz_ch).floor()
 	var tl_rel_ch = tl - ch*sz_ch
 	
-	if tl_types.has(ch):
-		return tl_types[ch][tl_rel_ch.x][tl_rel_ch.y]
+	if tl_type.has(ch):
+		return tl_type[ch][tl_rel_ch.x][tl_rel_ch.y]
 	else:
 		return -2
 
@@ -139,7 +149,12 @@ func _input(event):
 		if ch_loaded_ptr.has(sel_ch):
 			var rel_tl = get_rel_tl(sel_tl)
 			ch_loaded_ptr[sel_ch].get_node("TileMap").set_cell(rel_tl.x, rel_tl.y, -1)
-			tl_types[sel_ch][rel_tl.x][rel_tl.y] = -1
+			tl_type[sel_ch][rel_tl.x][rel_tl.y] = -1
+	if event.is_action_pressed("place_tile"):
+		if ch_loaded_ptr.has(sel_ch):
+			var rel_tl = get_rel_tl(sel_tl)
+			ch_loaded_ptr[sel_ch].get_node("TileMap").set_cell(rel_tl.x, rel_tl.y, 10)
+			tl_type[sel_ch][rel_tl.x][rel_tl.y] = 10
 
 
 func _on_Camera_save():
@@ -152,8 +167,8 @@ func _on_Camera_save():
 	if save_file_open_error != OK:
 		print("World: error at file open for saving")
 		get_tree().quit()
-	save_dict["tl_types"] = tl_types
 	save_dict["world_seed_str"] = Globals.world_seed_str
+	save_dict["tl_type"] = tl_type
 	save_file.store_var(save_dict)
 	save_file.close()
 	print("World: saved")

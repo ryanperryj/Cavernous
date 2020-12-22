@@ -1,51 +1,77 @@
 extends Node2D
 
 var noise_scr = preload("res://scripts/noise.gd")
-var background_scn = preload("res://instances/Background.tscn")
+var background_scn = preload("res://scenes/Background.tscn")
 
 var AIR = -1
 
 enum {
 	DIRT, STONE_DIRTY, STONE, STONE_DARK, STONE_LIGHT, 
 	STONE_DIRTY_BRICK, STONE_BRICK, STONE_DARK_BRICK, STONE_LIGHT_BRICK, 
-	ROOT,
+	ROOT, LAMP
 }
 
 enum {
 	DIRT_BG, STONE_DIRTY_BG, STONE_BG, STONE_DARK_BG, STONE_LIGHT_BG, 
 }
 
+const sz_ch = Globals.sz_ch
+
 var ch_index: Vector2
-var sz_ch: int
 var cave_depth = 16
 var tunnel_depth = 112
-var world_depth = 128
 
-var tl_types = []
+var tl_type = []
+var tl_color = []
+var tl_is_light = []
 
-func load_from_mem(sz_ch, tl_types_from_mem):
+signal readied
+
+func _ready():
+	# init arrays
+	var x = 0
+	var y = 0
+	var z = 0
+	while x < sz_ch:
+		tl_type.append([])
+		tl_is_light.append([])
+		tl_color.append([])
+		y = 0
+		while y < sz_ch:
+			tl_type[x].append(AIR)
+			tl_is_light[x].append(false)
+			tl_color[x].append([])
+			z = 0
+			while z < 4:
+				tl_color[x][y].append(0)
+				z += 1
+			y += 1
+		x += 1
+	
+	emit_signal("readied")
+
+
+func load_from_mem(tl_type_from_mem):
+	yield(self, "readied")
 	var x = 0
 	var y = 0
 	while x < sz_ch:
-		tl_types.append([])
 		y = 0
 		while y < sz_ch:
-			tl_types[x].append(AIR)
-			create_tile(x, y, tl_types_from_mem[x][y])
+			create_tile(x, y, tl_type_from_mem[x][y])
 			y += 1
 		x += 1
 
 
-func generate(sz_ch):
+func generate():
+	yield(self, "readied")
 	var noise = noise_scr.Noise.new(Globals.world_seed_str)
 	# generate solid ground
 	var x = 0
 	var y = 0
 	while x < sz_ch:
-		tl_types.append([])
 		y = 0
 		while y < sz_ch:
-			tl_types[x].append(AIR)
 			var x_global = ch_index.x*sz_ch + x
 			var y_global = ch_index.y*sz_ch + y
 			# top layer of solid stone
@@ -120,13 +146,22 @@ func generate(sz_ch):
 func create_debug_overlay():
 	var scn_overlay = load("res://instances/Debug_Overlay_Chunk.tscn").instance()
 	
-	scn_overlay.add_stat("pos_ch", self, "pos_ch", false, null)
-	scn_overlay.draw_chunk_border(sz_ch)
+	scn_overlay.add_stat("ch_index", self, "ch_index", false, null)
+	scn_overlay.draw_chunk_border()
 	add_child(scn_overlay)
+
 
 func create_tile(x: int, y: int, type: int):
 	$TileMap.set_cell(x, y, type)
-	tl_types[x][y] = type
+	tl_type[x][y] = type
+	if type == AIR:
+		tl_color[x][y] = [0, 0, 0, 0]
+	else:
+		tl_color[x][y] = [0, 0, 0, 1]
+	if type == LAMP:
+		tl_is_light[x][y] = true
+		tl_color[x][y] = [.139, .5, 1, 1] # 50/360deg, 50%, 100%, 100%
+
 
 func create_background(width, height, type):
 	return

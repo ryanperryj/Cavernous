@@ -3,8 +3,9 @@
 [ext_resource path="res://assets/ui/button.png" type="Texture" id=1]
 [ext_resource path="res://assets/ui/button_pressed.png" type="Texture" id=2]
 [ext_resource path="res://assets/ui/button_hovered.png" type="Texture" id=3]
-[ext_resource path="res://scripts/pause.gd" type="Script" id=5]
+[ext_resource path="res://scripts_ui/pause.gd" type="Script" id=5]
 [ext_resource path="res://assets/font/dynamic_font.tres" type="DynamicFont" id=6]
+
 
 [node name="Pause" type="Control"]
 pause_mode = 2
