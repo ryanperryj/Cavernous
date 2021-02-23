@@ -103,5 +103,5 @@ limits/debugger_stdout/max_chars_per_second=4096
 
 [rendering]
 
-environment/default_clear_color=Color( 0, 0, 0, 1 )
+environment/default_clear_color=Color( 0.19, 0.1843, 0.1843, 1 )
 environment/default_environment="res://default_env.tres"

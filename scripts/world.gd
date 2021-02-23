@@ -20,10 +20,7 @@ extends Node2D
 
 var save_path = "user://saves/world_" + str(Globals.world_num) + ".dat"
 
-var lighting_scr = preload("res://scripts/lighting.gd")
 var scn_ch = preload("res://scenes/Chunk.tscn")
-
-var lighting = lighting_scr.Lighting.new()
 
 const load_distance: int = 2	#ch
 const world_depth: int =  8		#ch
@@ -102,9 +99,6 @@ func _process(delta):
 					ch_loaded_ptr[ch].generate()
 					tl_type[ch] = ch_loaded_ptr[ch].tl_type
 				# stuff we do whether it's new or not
-				ch_loaded_ptr[ch].get_node("Sprite").scale = Vector2((sz_ch*sz_tl)/512, (sz_ch*sz_tl)/512)
-				lighting.tl_color[ch] = ch_loaded_ptr[ch].tl_color
-				lighting.tl_is_light[ch] = ch_loaded_ptr[ch].tl_is_light
 				call_deferred("add_child", (ch_loaded_ptr[ch]))
 	
 	# unload chunks
@@ -113,9 +107,6 @@ func _process(delta):
 		if rel_ch.x < -load_distance or rel_ch.x > load_distance or rel_ch.y < -load_distance or rel_ch.y > load_distance:
 			ch_loaded_ptr[ch].queue_free()
 			ch_loaded_ptr.erase(ch)
-			# also wipe secondary tile data (stuff that is determined in "chunk.create_tile" function)
-			lighting.tl_color.erase(ch)
-			lighting.tl_is_light.erase(ch)
 
 
 func get_cur_pos():

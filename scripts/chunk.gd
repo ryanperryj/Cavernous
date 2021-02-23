@@ -1,7 +1,6 @@
 extends Node2D
 
 var noise_scr = preload("res://scripts/noise.gd")
-var background_scn = preload("res://scenes/Background.tscn")
 
 var AIR = -1
 
@@ -9,10 +8,6 @@ enum {
 	DIRT, STONE_DIRTY, STONE, STONE_DARK, STONE_LIGHT, 
 	STONE_DIRTY_BRICK, STONE_BRICK, STONE_DARK_BRICK, STONE_LIGHT_BRICK, 
 	ROOT, LAMP
-}
-
-enum {
-	DIRT_BG, STONE_DIRTY_BG, STONE_BG, STONE_DARK_BG, STONE_LIGHT_BG, 
 }
 
 const sz_ch = Globals.sz_ch
@@ -77,11 +72,9 @@ func generate():
 			# top layer of solid stone
 			if  y_global < cave_depth - 3:
 				# y = 0 to 12
-				create_background(sz_ch, sz_ch, DIRT_BG)
 				create_tile(x, y, DIRT)
 			elif  y_global < cave_depth:
 				# y = 13 to 15
-				create_background(sz_ch, sz_ch, DIRT_BG)
 				if noise.value_noise_1D(x_global / 10.0) > lerp(.5, 1, (y_global - 13)/(15 - 13)):
 					create_tile(x, y, DIRT)
 				else:
@@ -90,29 +83,24 @@ func generate():
 				# y = 16 to 127
 				if y_global < 29:
 					# y = 16 to 28
-					create_background(sz_ch, sz_ch, STONE_DIRTY_BG)
 					create_tile(x, y, STONE_DIRTY)
 				elif  y_global < 32:
 					# y = 29 to 31
-					create_background(sz_ch, sz_ch, STONE_DIRTY_BG)
 					if noise.value_noise_1D(x_global / 10.0) > lerp(.5, 1, (y_global - 29)/(31 - 29)) - .1:
 						create_tile(x, y, STONE_DIRTY)
 					else:
 						create_tile(x, y, STONE)
 				elif y_global < 93:
 					# y = 32 to 92
-					create_background(sz_ch, sz_ch, STONE_BG)
 					create_tile(x, y, STONE)
 				elif y_global < 96:
 					# y = 93 to 95
-					create_background(sz_ch, sz_ch, STONE_BG)
 					if noise.value_noise_1D(x_global / 10.0) > lerp(.5, 1, (y_global - 93)/(96 - 93)) - .2:
 						create_tile(x, y, STONE)
 					else:
 						create_tile(x, y, STONE_DARK)
 				else:
 					# y = 96 to 127
-					create_background(sz_ch, sz_ch, STONE_DARK_BG)
 					create_tile(x, y, STONE_DARK)
 			y += 1
 		x += 1
@@ -154,19 +142,3 @@ func create_debug_overlay():
 func create_tile(x: int, y: int, type: int):
 	$TileMap.set_cell(x, y, type)
 	tl_type[x][y] = type
-	if type == AIR:
-		tl_color[x][y] = [0, 0, 0, 0]
-	else:
-		tl_color[x][y] = [0, 0, 0, 1]
-	if type == LAMP:
-		tl_is_light[x][y] = true
-		tl_color[x][y] = [.139, .5, 1, 1] # 50/360deg, 50%, 100%, 100%
-
-
-func create_background(width, height, type):
-	return
-	var new_background = background_scn.instance()
-	new_background.background_type = type
-	new_background.width = width*16
-	new_background.height = height*16
-	add_child(new_background)

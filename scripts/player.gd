@@ -44,10 +44,15 @@ func _physics_process(delta):
 	
 	if Input.is_action_pressed("right") and !Input.is_action_pressed("left"):
 		velocity.x = MOVE_SPEED 
+		$Sprite.flip_h = true
+		$AnimationPlayer.play("run")
 	elif Input.is_action_pressed("left") and !Input.is_action_pressed("right"):
 		velocity.x = -MOVE_SPEED
+		$Sprite.flip_h = false
+		$AnimationPlayer.play("run")
 	else:
 		velocity.x = 0
+		$AnimationPlayer.play("idle")
 	
 	if Input.is_action_just_pressed("jump"):
 		velocity.y = -JUMP_FORCE
