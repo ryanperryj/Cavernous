@@ -2,14 +2,6 @@ extends Node2D
 
 var noise_scr = preload("res://scripts/noise.gd")
 
-var AIR = -1
-
-enum {
-	DIRT, STONE_DIRTY, STONE, STONE_DARK, STONE_LIGHT, 
-	STONE_DIRTY_BRICK, STONE_BRICK, STONE_DARK_BRICK, STONE_LIGHT_BRICK, 
-	ROOT, LAMP
-}
-
 const sz_ch = Globals.sz_ch
 
 var ch_index: Vector2
@@ -17,8 +9,6 @@ var cave_depth = 16
 var tunnel_depth = 112
 
 var tl_type = []
-var tl_color = []
-var tl_is_light = []
 
 signal readied
 
@@ -26,20 +16,11 @@ func _ready():
 	# init arrays
 	var x = 0
 	var y = 0
-	var z = 0
 	while x < sz_ch:
 		tl_type.append([])
-		tl_is_light.append([])
-		tl_color.append([])
 		y = 0
 		while y < sz_ch:
-			tl_type[x].append(AIR)
-			tl_is_light[x].append(false)
-			tl_color[x].append([])
-			z = 0
-			while z < 4:
-				tl_color[x][y].append(0)
-				z += 1
+			tl_type[x].append(Globals.AIR)
 			y += 1
 		x += 1
 	
@@ -72,36 +53,36 @@ func generate():
 			# top layer of solid stone
 			if  y_global < cave_depth - 3:
 				# y = 0 to 12
-				create_tile(x, y, DIRT)
+				create_tile(x, y, Globals.DIRT)
 			elif  y_global < cave_depth:
 				# y = 13 to 15
 				if noise.value_noise_1D(x_global / 10.0) > lerp(.5, 1, (y_global - 13)/(15 - 13)):
-					create_tile(x, y, DIRT)
+					create_tile(x, y, Globals.DIRT)
 				else:
-					create_tile(x, y, STONE_DIRTY)
+					create_tile(x, y, Globals.STONE_DIRTY)
 			else:
 				# y = 16 to 127
 				if y_global < 29:
 					# y = 16 to 28
-					create_tile(x, y, STONE_DIRTY)
+					create_tile(x, y, Globals.STONE_DIRTY)
 				elif  y_global < 32:
 					# y = 29 to 31
 					if noise.value_noise_1D(x_global / 10.0) > lerp(.5, 1, (y_global - 29)/(31 - 29)) - .1:
-						create_tile(x, y, STONE_DIRTY)
+						create_tile(x, y, Globals.STONE_DIRTY)
 					else:
-						create_tile(x, y, STONE)
+						create_tile(x, y, Globals.STONE)
 				elif y_global < 93:
 					# y = 32 to 92
-					create_tile(x, y, STONE)
+					create_tile(x, y, Globals.STONE)
 				elif y_global < 96:
 					# y = 93 to 95
 					if noise.value_noise_1D(x_global / 10.0) > lerp(.5, 1, (y_global - 93)/(96 - 93)) - .2:
-						create_tile(x, y, STONE)
+						create_tile(x, y, Globals.STONE)
 					else:
-						create_tile(x, y, STONE_DARK)
+						create_tile(x, y, Globals.STONE_DARK)
 				else:
 					# y = 96 to 127
-					create_tile(x, y, STONE_DARK)
+					create_tile(x, y, Globals.STONE_DARK)
 			y += 1
 		x += 1
 	
@@ -118,15 +99,15 @@ func generate():
 				if y_global < 32:
 					# y = 16 to 31
 					if noise.value_noise_2D(x_global / 10.0, y_global / 10.0) > lerp(1, .5, (y_global - 16)/(31 - 16)):
-						create_tile(x, y, AIR)
+						create_tile(x, y, Globals.AIR)
 				elif y_global < 96:
 					# y = 32 to 95
 					if noise.value_noise_2D(x_global / 10.0, y_global / 10.0) > .5:
-						create_tile(x, y, AIR)
+						create_tile(x, y, Globals.AIR)
 				else:
 					# y = 96 to 111
 					if noise.value_noise_2D(x_global / 10.0, y_global / 10.0) > lerp(.5, 1, (y_global - 96)/(111 - 96)):
-						create_tile(x, y, AIR)
+						create_tile(x, y, Globals.AIR)
 			y += 1
 		x += 1
 

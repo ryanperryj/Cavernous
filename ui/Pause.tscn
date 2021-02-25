@@ -6,7 +6,6 @@
 [ext_resource path="res://scripts_ui/pause.gd" type="Script" id=5]
 [ext_resource path="res://assets/font/dynamic_font.tres" type="DynamicFont" id=6]
 
-
 [node name="Pause" type="Control"]
 pause_mode = 2
 margin_right = 40.0

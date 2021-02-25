@@ -108,7 +108,6 @@ func _process(delta):
 			ch_loaded_ptr[ch].queue_free()
 			ch_loaded_ptr.erase(ch)
 
-
 func get_cur_pos():
 	return cur_pos
 
@@ -118,10 +117,18 @@ func get_cur_tl():
 func get_cur_ch():
 	return cur_ch
 
+func get_sel_pos():
+	return sel_pos
+
+func get_sel_tl():
+	return sel_tl
+
+func get_sel_ch():
+	return sel_ch
+
 func get_rel_tl(tl: Vector2) -> Vector2:
 	var ch = (tl / sz_ch).floor()
 	return tl - ch*sz_ch
-
 
 func get_tl_type(tl: Vector2) -> int:
 	var ch = (tl / sz_ch).floor()
@@ -130,22 +137,21 @@ func get_tl_type(tl: Vector2) -> int:
 	if tl_type.has(ch):
 		return tl_type[ch][tl_rel_ch.x][tl_rel_ch.y]
 	else:
-		return -2
+		return -1
 
 
-func _input(event):
-	if event.is_action_released("reload"):
-		get_tree().reload_current_scene()
-	if event.is_action_pressed("break_tile"):
-		if ch_loaded_ptr.has(sel_ch):
-			var rel_tl = get_rel_tl(sel_tl)
-			ch_loaded_ptr[sel_ch].get_node("TileMap").set_cell(rel_tl.x, rel_tl.y, -1)
-			tl_type[sel_ch][rel_tl.x][rel_tl.y] = -1
-	if event.is_action_pressed("place_tile"):
-		if ch_loaded_ptr.has(sel_ch):
-			var rel_tl = get_rel_tl(sel_tl)
-			ch_loaded_ptr[sel_ch].get_node("TileMap").set_cell(rel_tl.x, rel_tl.y, 10)
-			tl_type[sel_ch][rel_tl.x][rel_tl.y] = 10
+func _on_Player_break_tile():
+	if ch_loaded_ptr.has(sel_ch):
+		var rel_tl = get_rel_tl(sel_tl)
+		ch_loaded_ptr[sel_ch].get_node("TileMap").set_cell(rel_tl.x, rel_tl.y, -1)
+		tl_type[sel_ch][rel_tl.x][rel_tl.y] = -1
+
+
+func _on_Player_place_tile(tl_type_placing):
+	if ch_loaded_ptr.has(sel_ch) and get_tl_type(get_sel_tl()) == Globals.AIR:
+		var rel_tl = get_rel_tl(sel_tl)
+		ch_loaded_ptr[sel_ch].get_node("TileMap").set_cell(rel_tl.x, rel_tl.y, tl_type_placing)
+		tl_type[sel_ch][rel_tl.x][rel_tl.y] = tl_type_placing
 
 
 func _on_Camera_save():

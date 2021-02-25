@@ -8,8 +8,12 @@
 script = ExtResource( 3 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 0, -24 )
 
 [node name="Camera" type="Camera2D" parent="Player"]
+z_index = 10
 current = true
 script = ExtResource( 1 )
+[connection signal="break_tile" from="Player" to="." method="_on_Player_break_tile"]
+[connection signal="place_tile" from="Player" to="." method="_on_Player_place_tile"]
 [connection signal="save" from="Player/Camera" to="." method="_on_Camera_save"]
