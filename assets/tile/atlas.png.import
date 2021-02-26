@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/1_stone_dirty.png-939925e8d4b5790f27f4dd59a7c32b88.stex"
+path="res://.import/atlas.png-915791b53239d59f7beba89c2b42aaca.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tile/1_stone_dirty.png"
-dest_files=[ "res://.import/1_stone_dirty.png-939925e8d4b5790f27f4dd59a7c32b88.stex" ]
+source_file="res://assets/tile/atlas.png"
+dest_files=[ "res://.import/atlas.png-915791b53239d59f7beba89c2b42aaca.stex" ]
 
 [params]
 

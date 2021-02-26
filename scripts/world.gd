@@ -56,10 +56,12 @@ func _ready():
 		save_dict = save_file.get_var()
 		tl_type = save_dict["tl_type"]
 		Globals.world_seed_str = save_dict["world_seed_str"]
+		$Player.position = save_dict["player_pos"]
 		print("World: loaded ; world number = ", Globals.world_num, " ; seed string = '",  Globals.world_seed_str, "'")
 		save_file.close()
 	else:
 		print("World: created ; world number = ", Globals.world_num, " ; seed string = '",  Globals.world_seed_str, "'")
+		$Player.position = Vector2(0,1024)
 	set_process(true)
 	
 	# generate debug overlay
@@ -67,6 +69,7 @@ func _ready():
 	scn_overlay.add_stat("Player Position", self, "get_cur_pos", true)
 	scn_overlay.add_stat("Player Tile", self, "get_cur_tl", true)
 	scn_overlay.add_stat("Player Chunk", self, "get_cur_ch", true)
+	scn_overlay.add_stat("Selected AutoTile Coord", self, "get_sel_autotile_coord", true)
 	add_child(scn_overlay)
 
 
@@ -126,31 +129,43 @@ func get_sel_tl():
 func get_sel_ch():
 	return sel_ch
 
+func get_sel_autotile_coord():
+	# added as part of atlas debugging
+	return get_tl_type(get_cur_tl())
+
 func get_rel_tl(tl: Vector2) -> Vector2:
 	var ch = (tl / sz_ch).floor()
 	return tl - ch*sz_ch
 
-func get_tl_type(tl: Vector2) -> int:
+func is_air(tl: Vector2) -> bool:
 	var ch = (tl / sz_ch).floor()
 	var tl_rel_ch = tl - ch*sz_ch
 	
-	if tl_type.has(ch):
-		return tl_type[ch][tl_rel_ch.x][tl_rel_ch.y]
+	if ch_loaded_ptr.has(ch):
+		return ch_loaded_ptr[ch].get_node("TileMap").get_cell(tl_rel_ch.x, tl_rel_ch.y) == TileMap.INVALID_CELL
+	return false
+
+func get_tl_type(tl: Vector2) -> Vector2:
+	var ch = (tl / sz_ch).floor()
+	var tl_rel_ch = tl - ch*sz_ch
+	
+	if ch_loaded_ptr.has(ch):
+		return ch_loaded_ptr[ch].get_node("TileMap").get_cell_autotile_coord(tl_rel_ch.x, tl_rel_ch.y)
 	else:
-		return -1
+		return Globals.AIR
 
 
 func _on_Player_break_tile():
 	if ch_loaded_ptr.has(sel_ch):
 		var rel_tl = get_rel_tl(sel_tl)
-		ch_loaded_ptr[sel_ch].get_node("TileMap").set_cell(rel_tl.x, rel_tl.y, -1)
-		tl_type[sel_ch][rel_tl.x][rel_tl.y] = -1
+		ch_loaded_ptr[sel_ch].create_tile(rel_tl.x, rel_tl.y, Globals.AIR)
+		tl_type[sel_ch][rel_tl.x][rel_tl.y] = Globals.AIR
 
 
-func _on_Player_place_tile(tl_type_placing):
-	if ch_loaded_ptr.has(sel_ch) and get_tl_type(get_sel_tl()) == Globals.AIR:
+func _on_Player_place_tile(tl_type_placing: Vector2):
+	if ch_loaded_ptr.has(sel_ch):
 		var rel_tl = get_rel_tl(sel_tl)
-		ch_loaded_ptr[sel_ch].get_node("TileMap").set_cell(rel_tl.x, rel_tl.y, tl_type_placing)
+		ch_loaded_ptr[sel_ch].create_tile(rel_tl.x, rel_tl.y, tl_type_placing)
 		tl_type[sel_ch][rel_tl.x][rel_tl.y] = tl_type_placing
 
 
@@ -166,6 +181,7 @@ func _on_Camera_save():
 		get_tree().quit()
 	save_dict["world_seed_str"] = Globals.world_seed_str
 	save_dict["tl_type"] = tl_type
+	save_dict["player_pos"] = $Player.position
 	save_file.store_var(save_dict)
 	save_file.close()
 	print("World: saved")

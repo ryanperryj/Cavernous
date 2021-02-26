@@ -61,7 +61,7 @@ func _physics_process(delta):
 	## block breaking and placing ##
 	
 	if Input.is_action_pressed("break_tile"):
-		if World_ptr.get_tl_type(sel_tl) != Globals.AIR:
+		if !World_ptr.is_air(sel_tl):
 			if $BreakTimer.is_paused():
 				$BreakTimer.paused = false
 				$BreakTimer.start(get_break_time())
@@ -75,14 +75,17 @@ func _physics_process(delta):
 		$BreakTimer.paused = true
 	
 	if Input.is_action_pressed("place_tile"):
-		if World_ptr.get_tl_type(sel_tl) == Globals.AIR:
+		if World_ptr.is_air(sel_tl):
 			emit_signal("place_tile", tl_type_placing)
 			print("Player: emitted signal 'place_tile', tile type = ", tl_type_placing)
 		else:
 			print("Player: failed to place tile")
 	
 	if Input.is_action_pressed("select_tile"):
-		tl_type_placing = World_ptr.get_tl_type(sel_tl)
+		if !World_ptr.is_air(sel_tl):
+			tl_type_placing = World_ptr.get_tl_type(sel_tl)
+			print("Player: selected tile', tile type = ", tl_type_placing)
+		print("Player: failed to select tile", tl_type_placing)
 	
 	## check for god mode ##
 	

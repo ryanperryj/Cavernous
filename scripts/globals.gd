@@ -6,8 +6,9 @@ var world_seed_str: String
 const sz_tl: int = 16 # px
 const sz_ch: int = 16 # tl
 
-const AIR = -1
+const AIR = Vector2(-1,-1)
 
-enum {
-	DIRT, STONE_DIRTY, STONE, STONE_DARK
-}
+const DIRT = Vector2(0,0)
+const STONE_DIRTY = Vector2(1,0)
+const STONE = Vector2(2,0)
+const STONE_DARK = Vector2(3,0)

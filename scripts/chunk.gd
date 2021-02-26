@@ -94,7 +94,7 @@ func generate():
 		while y < sz_ch:
 			var x_global = ch_index.x*sz_ch + x
 			var y_global = ch_index.y*sz_ch + y
-			if y_global >= cave_depth and  y_global < tunnel_depth:
+			if y_global >= cave_depth and y_global < tunnel_depth:
 				# y = 16 to 111
 				if y_global < 32:
 					# y = 16 to 31
@@ -120,6 +120,9 @@ func create_debug_overlay():
 	add_child(scn_overlay)
 
 
-func create_tile(x: int, y: int, type: int):
-	$TileMap.set_cell(x, y, type)
+func create_tile(x: int, y: int, type: Vector2):
+	if type == Globals.AIR:
+		$TileMap.set_cell(x, y, -1)
+	else:
+		$TileMap.set_cell(x, y, 0, false, false, false, type)
 	tl_type[x][y] = type

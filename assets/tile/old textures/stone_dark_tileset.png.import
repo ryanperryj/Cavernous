@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/3_stone_dark.png-77a0ed0bfa4b04d098dee1fd8b786b6e.stex"
+path="res://.import/stone_dark_tileset.png-7e945b02888d63a50c9620901178cbf9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tile/3_stone_dark.png"
-dest_files=[ "res://.import/3_stone_dark.png-77a0ed0bfa4b04d098dee1fd8b786b6e.stex" ]
+source_file="res://assets/tile/old textures/stone_dark_tileset.png"
+dest_files=[ "res://.import/stone_dark_tileset.png-7e945b02888d63a50c9620901178cbf9.stex" ]
 
 [params]
 

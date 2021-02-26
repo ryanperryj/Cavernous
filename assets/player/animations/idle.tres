@@ -14,7 +14,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 0, 0.5 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( 0, 1 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Sprites/Body_and_Head/EyesPivot/Eyes:position")
@@ -38,7 +38,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 0, -0.5 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( 0, -1 ) ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("Sprites/Body_and_Head/LegLPivot/LegL:rotation_degrees")
@@ -62,7 +62,7 @@ tracks/4/keys = {
 "times": PoolRealArray( 0, 3 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 0, -0.5 ) ]
+"values": [ Vector2( 0, 0 ), Vector2( 0, -1 ) ]
 }
 tracks/5/type = "value"
 tracks/5/path = NodePath("Sprites/Body_and_Head/LegRPivot/LegR:rotation_degrees")
@@ -86,7 +86,7 @@ tracks/6/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( -0.5, 0 ) ]
+"values": [ Vector2( -1, 0 ) ]
 }
 tracks/7/type = "value"
 tracks/7/path = NodePath("Sprites/Body_and_Head/ArmLPivot/ArmL:rotation_degrees")
@@ -122,7 +122,7 @@ tracks/9/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ Vector2( 0.5, 0 ) ]
+"values": [ Vector2( 1, 0 ) ]
 }
 tracks/10/type = "value"
 tracks/10/path = NodePath("Sprites/Body_and_Head/ArmRPivot/ArmR:rotation_degrees")
