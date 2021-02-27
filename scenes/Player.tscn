@@ -1,10 +1,14 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scripts/player.gd" type="Script" id=1]
 [ext_resource path="res://assets/player/they_sheet.png" type="Texture" id=2]
-[ext_resource path="res://assets/player/animations/idle.tres" type="Animation" id=3]
+[ext_resource path="res://assets/player/animations/idleL.tres" type="Animation" id=3]
 [ext_resource path="res://assets/player/animations/runL.tres" type="Animation" id=4]
 [ext_resource path="res://assets/player/animations/runR.tres" type="Animation" id=5]
+[ext_resource path="res://assets/player/animations/idleR.tres" type="Animation" id=6]
+[ext_resource path="res://assets/player/animations/idleF.tres" type="Animation" id=7]
+[ext_resource path="res://assets/player/animations/useL.tres" type="Animation" id=8]
+[ext_resource path="res://assets/player/animations/useR.tres" type="Animation" id=9]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 8, 22.5 )
@@ -13,7 +17,7 @@ extents = Vector2( 8, 22.5 )
 z_index = 1
 script = ExtResource( 1 )
 
-[node name="Body" type="CollisionShape2D" parent="."]
+[node name="CS_Body" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
 [node name="Sprites" type="Node2D" parent="."]
@@ -24,7 +28,7 @@ __meta__ = {
 }
 
 [node name="Body_and_Head" type="Sprite" parent="Sprites"]
-position = Vector2( 0, 0.488483 )
+position = Vector2( 0, 0.166667 )
 texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 0, 0, 12, 28 )
@@ -36,6 +40,7 @@ __meta__ = {
 }
 
 [node name="Eyes" type="Sprite" parent="Sprites/Body_and_Head/EyesPivot"]
+position = Vector2( -1, 0 )
 texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( 24, 0, 6, 4 )
@@ -47,7 +52,7 @@ __meta__ = {
 }
 
 [node name="LegL" type="Sprite" parent="Sprites/Body_and_Head/LegLPivot"]
-position = Vector2( 0, -0.488483 )
+position = Vector2( 0, -0.166667 )
 z_index = -1
 texture = ExtResource( 2 )
 offset = Vector2( 0, 9 )
@@ -61,7 +66,7 @@ __meta__ = {
 }
 
 [node name="LegR" type="Sprite" parent="Sprites/Body_and_Head/LegRPivot"]
-position = Vector2( 0, -0.488483 )
+position = Vector2( 0, -0.166667 )
 z_index = 1
 texture = ExtResource( 2 )
 offset = Vector2( 0, 9 )
@@ -75,7 +80,6 @@ __meta__ = {
 }
 
 [node name="ArmL" type="Sprite" parent="Sprites/Body_and_Head/ArmLPivot"]
-position = Vector2( -1, 0 )
 z_index = -2
 texture = ExtResource( 2 )
 offset = Vector2( 0, 8 )
@@ -89,17 +93,36 @@ __meta__ = {
 }
 
 [node name="ArmR" type="Sprite" parent="Sprites/Body_and_Head/ArmRPivot"]
-position = Vector2( 1, 0 )
 z_index = 2
 texture = ExtResource( 2 )
 offset = Vector2( 0, 8 )
 region_enabled = true
 region_rect = Rect2( 20, 0, 2, 16 )
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/idle = ExtResource( 3 )
+[node name="UseArmPivot" type="Node2D" parent="Sprites/Body_and_Head"]
+position = Vector2( 6, 2.25 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="UseArm" type="Sprite" parent="Sprites/Body_and_Head/UseArmPivot"]
+rotation = -0.959931
+z_index = -2
+texture = ExtResource( 2 )
+offset = Vector2( 0, 8 )
+region_enabled = true
+region_rect = Rect2( 20, 0, 2, 16 )
+
+[node name="AP_Body" type="AnimationPlayer" parent="."]
+anims/idleF = ExtResource( 7 )
+anims/idleL = ExtResource( 3 )
+anims/idleR = ExtResource( 6 )
 anims/runL = ExtResource( 4 )
 anims/runR = ExtResource( 5 )
 
-[node name="BreakTimer" type="Timer" parent="."]
+[node name="AP_UseArm" type="AnimationPlayer" parent="."]
+anims/useL = ExtResource( 8 )
+anims/useR = ExtResource( 9 )
+
+[node name="Timer_Break" type="Timer" parent="."]
 one_shot = true
