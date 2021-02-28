@@ -26,7 +26,7 @@ func _on_World1Button_pressed():
 	if dir.file_exists("user://saves/world_1.dat"):
 		get_tree().change_scene("res://scenes/World.tscn")
 	else:
-		get_tree().change_scene("res://ui/World_Create.tscn")
+		get_tree().change_scene("res://scenes_ui/World_Create.tscn")
 
 func _on_World2Button_pressed():
 	Globals.world_num = 2
@@ -40,14 +40,14 @@ func _on_World3Button_pressed():
 	if dir.file_exists("user://saves/world_3.dat"):
 		get_tree().change_scene("res://scenes/World.tscn")
 	else:
-		get_tree().change_scene("res://ui/World_Create.tscn")
+		get_tree().change_scene("res://scenes_ui/World_Create.tscn")
 
 func _on_World4Button_pressed():
 	Globals.world_num = 4
 	if dir.file_exists("user://saves/world_4.dat"):
 		get_tree().change_scene("res://scenes/World.tscn")
 	else:
-		get_tree().change_scene("res://ui/World_Create.tscn")
+		get_tree().change_scene("res://scenes_ui/World_Create.tscn")
 
 
 func _on_XWorld1Button_pressed():
@@ -75,4 +75,4 @@ func _on_XWorld4Button_pressed():
 	$ColorRect/XWorld4Button.visible = false
 
 func _on_BackButton_pressed():
-	get_tree().change_scene("res://ui/Title.tscn")
+	get_tree().change_scene("res://scenes_ui/Title.tscn")

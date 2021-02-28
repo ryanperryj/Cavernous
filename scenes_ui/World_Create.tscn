@@ -1,10 +1,14 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://assets/ui/button_pressed.png" type="Texture" id=1]
 [ext_resource path="res://assets/ui/button_hovered.png" type="Texture" id=2]
 [ext_resource path="res://assets/ui/button.png" type="Texture" id=3]
 [ext_resource path="res://assets/font/dynamic_font.tres" type="DynamicFont" id=4]
 [ext_resource path="res://scripts_ui/world_create.gd" type="Script" id=5]
+[ext_resource path="res://assets/font/retganon.ttf" type="DynamicFontData" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 6 )
 
 [node name="World_Create" type="Control"]
 anchor_right = 1.0
@@ -75,13 +79,13 @@ __meta__ = {
 }
 
 [node name="SeedLineEdit" type="LineEdit" parent="ColorRect"]
-margin_left = 465.0
-margin_top = 125.0
-margin_right = 605.0
-margin_bottom = 157.0
-rect_scale = Vector2( 2.5, 2.5 )
-custom_fonts/font = ExtResource( 4 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
+margin_left = 360.0
+margin_top = 130.0
+margin_right = 500.0
+margin_bottom = 134.0
+rect_scale = Vector2( 4, 4 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.87451, 0.941176, 0.941176, 1 )
 placeholder_text = "Seed"
 __meta__ = {
 "_edit_use_anchors_": false

@@ -22,7 +22,7 @@ var save_path = "user://saves/world_" + str(Globals.world_num) + ".dat"
 
 var scn_ch = preload("res://scenes/Chunk.tscn")
 
-const load_distance: int = 2	#ch
+const load_distance: int = 4	#ch
 const world_depth: int =  8		#ch
 
 const sz_tl = Globals.sz_tl

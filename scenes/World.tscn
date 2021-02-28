@@ -13,6 +13,7 @@ position = Vector2( 0, -24 )
 [node name="Camera" type="Camera2D" parent="Player"]
 z_index = 10
 current = true
+zoom = Vector2( 0.5, 0.5 )
 script = ExtResource( 1 )
 [connection signal="break_tile" from="Player" to="." method="_on_Player_break_tile"]
 [connection signal="place_tile" from="Player" to="." method="_on_Player_place_tile"]

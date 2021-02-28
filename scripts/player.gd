@@ -19,9 +19,10 @@ var velocity = Vector2.ZERO
 var tl_type_placing = Globals.STONE
 var sel_tl = Vector2.ZERO
 
-enum {R, L, F}
+enum {F, R, L}
 var facing_dir = F
 var using = false
+var just_off_floor = true
 
 signal damage_tile
 signal break_tile
@@ -37,41 +38,9 @@ func _physics_process(delta):
 	var x_input = Input.get_action_strength("right") - Input.get_action_strength("left")
 	var y_input = Input.get_action_strength("up") - Input.get_action_strength("down")
 	
-	$Sprites/Body_and_Head/ArmRPivot/ArmR.visible = !using
-	$Sprites/Body_and_Head/UseArmPivot/UseArm.visible = using
-	
-	if using:
-		if get_global_mouse_position().x > position.x:
-			facing_dir = R
-		else:
-			facing_dir = L
-	else:
-		if y_input != 0:
-			facing_dir = F
-	
 	if x_input == 0:
-		if facing_dir == F:
-			$AP_Body.play("idleF")
-		elif facing_dir == R:
-			$AP_Body.play("idleR")
-			$AP_UseArm.play("useR")
-		elif facing_dir == L:
-			$AP_Body.play("idleL")
-			$AP_UseArm.play("useL")
 		velocity.x = move_toward(velocity.x, 0.0, FRICTION * delta)
 	else:
-		if !using:
-			if x_input > 0:
-				facing_dir = R
-			elif x_input < 0:
-				facing_dir = L
-		
-		if facing_dir == R:
-			$AP_Body.play("runR")
-			$AP_UseArm.play("useR")
-		elif facing_dir == L:
-			$AP_Body.play("runL")
-			$AP_UseArm.play("useL")
 		velocity.x = move_toward(velocity.x, MAX_SPEED * x_input, ACCELERATION * delta)
 	
 	if god_mode:
@@ -130,6 +99,52 @@ func _physics_process(delta):
 			MAX_SPEED = 500
 		else:
 			MAX_SPEED = 200
+	
+	## animations ##
+	
+	$Sprites/Body_and_Head/ArmRPivot/ArmR.visible = !using
+	$Sprites/Body_and_Head/UseArmPivot/UseArm.visible = using
+	
+	if using:
+		if get_global_mouse_position().x > position.x:
+			facing_dir = R
+		else:
+			facing_dir = L
+	else:
+		if y_input != 0:
+			facing_dir = F
+		else:
+			if x_input > 0:
+				facing_dir = R
+			elif x_input < 0:
+				facing_dir = L
+	
+	if facing_dir == R:
+		$AP_UseArm.play("useR")
+	elif facing_dir == L:
+		$AP_UseArm.play("useL")
+	
+	if is_on_floor():
+		if x_input == 0:
+			if facing_dir == F:
+				$AP_Body.play("idleF")
+			elif facing_dir == R:
+				$AP_Body.play("idleR")
+			elif facing_dir == L:
+				$AP_Body.play("idleL")
+		else:
+			if facing_dir == R:
+				$AP_Body.play("runR",-1,1.5)
+			elif facing_dir == L:
+				$AP_Body.play("runL",-1,1.5)
+	else:
+		if facing_dir == F:
+			$AP_Body.play("fallF")
+		elif facing_dir == R:
+			$AP_Body.play("fallR")
+		elif facing_dir == L:
+			$AP_Body.play("fallL")
+
 
 func get_break_time():
 	var tl_type = World_ptr.get_tl_type(sel_tl)
@@ -140,8 +155,9 @@ func get_break_time():
 	if tl_type == Globals.DIRT:
 		return .25
 	elif tl_type == Globals.STONE_DIRTY:
-		return .5
+		return .35
 	elif tl_type == Globals.STONE:
-		return .75
+		return .5
 	elif tl_type == Globals.STONE_DARK:
-		return 1
+		return .75
+	return 1000

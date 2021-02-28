@@ -20,7 +20,7 @@ func _on_OptionsButton_pressed():
 
 func _on_ExitButton_pressed():
 	get_tree().paused = false
-	get_tree().change_scene("res://ui/Title.tscn")
+	get_tree().change_scene("res://scenes_ui/Title.tscn")
 
 
 func _unpause():

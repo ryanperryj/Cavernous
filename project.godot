@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Cavernous"
-run/main_scene="res://ui/Title.tscn"
+run/main_scene="res://scenes_ui/Title.tscn"
 config/icon="res://icon.png"
 
 [autoload]

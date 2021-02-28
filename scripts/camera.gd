@@ -1,6 +1,6 @@
 extends Camera2D
 
-var scn_pause = preload("res://ui/Pause.tscn")
+var scn_pause = preload("res://scenes_ui/Pause.tscn")
 
 var pause = scn_pause.instance()
 

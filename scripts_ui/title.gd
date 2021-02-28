@@ -1,7 +1,7 @@
 extends Control
 
 func _on_PlayButton_pressed():
-	get_tree().change_scene("res://ui/World_Select.tscn")
+	get_tree().change_scene("res://scenes_ui/World_Select.tscn")
 
 
 func _on_OptionsButton_pressed():
