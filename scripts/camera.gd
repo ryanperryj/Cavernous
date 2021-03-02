@@ -8,6 +8,7 @@ signal save
 
 func _ready():
 	pause.connect("unpause", self, "_unpause")
+	pause.offset = get_viewport_transform() * (get_global_transform() * position)
 
 
 func _process(delta):
@@ -23,7 +24,7 @@ func _input(event):
 	if event.is_action_pressed("pause"):
 		print("Camera: paused ; emitted signal 'save'")
 		emit_signal("save")
-		pause.rect_scale = zoom
+		#pause.rect_scale = zoom
 		add_child(pause)
 		get_tree().paused = true
 
