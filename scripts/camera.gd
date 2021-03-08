@@ -1,8 +1,12 @@
 extends Camera2D
 
 var scn_pause = preload("res://scenes_ui/Pause.tscn")
+var scn_inventory = preload("res://inventory/scenes/Inventory_Container.tscn")
 
 var pause = scn_pause.instance()
+var inventory_screen = scn_inventory.instance()
+
+var inventory_open = false
 
 signal save
 
@@ -24,9 +28,22 @@ func _input(event):
 	if event.is_action_pressed("pause"):
 		print("Camera: paused ; emitted signal 'save'")
 		emit_signal("save")
-		#pause.rect_scale = zoom
 		add_child(pause)
 		get_tree().paused = true
+		
+		inventory_open = false
+		print("Camera: inventory closed")
+		remove_child(inventory_screen)
+	
+	if event.is_action_pressed("open_inventory"):
+		if inventory_open:
+			inventory_open = false
+			print("Camera: inventory closed")
+			remove_child(inventory_screen)
+		else:
+			inventory_open = true
+			print("Camera: inventory opened")
+			add_child(inventory_screen)
 
 func _unpause():
 	print("Camera: unpaused")

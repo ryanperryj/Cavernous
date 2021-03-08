@@ -151,13 +151,10 @@ func get_break_time():
 	
 	if god_mode:
 		return .005
-	
-	if tl_type == Globals.DIRT:
-		return .25
-	elif tl_type == Globals.STONE_DIRTY:
-		return .35
-	elif tl_type == Globals.STONE:
+	if tl_type == Globals.ASH:
+		return .1
+	if tl_type == Globals.STONE:
 		return .5
-	elif tl_type == Globals.STONE_DARK:
+	if tl_type == Globals.STONE_DARK:
 		return .75
 	return 1000

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/stone_dirty.png-ef5b32d5595389c8cec13563323d72e3.stex"
+path="res://.import/ash.png-3639e0f8b248fe2416843798e446eac9.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/item/stone_dirty.png"
-dest_files=[ "res://.import/stone_dirty.png-ef5b32d5595389c8cec13563323d72e3.stex" ]
+source_file="res://assets/item/ash.png"
+dest_files=[ "res://.import/ash.png-3639e0f8b248fe2416843798e446eac9.stex" ]
 
 [params]
 

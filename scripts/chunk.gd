@@ -53,22 +53,22 @@ func generate():
 			# top layer of solid stone
 			if  y_global < cave_depth - 3:
 				# y = 0 to 12
-				create_tile(x, y, Globals.DIRT)
+				create_tile(x, y, Globals.ASH)
 			elif  y_global < cave_depth:
 				# y = 13 to 15
 				if noise.value_noise_1D(x_global / 10.0) > lerp(.5, 1, (y_global - 13)/(15 - 13)):
-					create_tile(x, y, Globals.DIRT)
+					create_tile(x, y, Globals.ASH)
 				else:
-					create_tile(x, y, Globals.STONE_DIRTY)
+					create_tile(x, y, Globals.ASH)
 			else:
 				# y = 16 to 127
 				if y_global < 29:
 					# y = 16 to 28
-					create_tile(x, y, Globals.STONE_DIRTY)
+					create_tile(x, y, Globals.ASH)
 				elif  y_global < 32:
 					# y = 29 to 31
 					if noise.value_noise_1D(x_global / 10.0) > lerp(.5, 1, (y_global - 29)/(31 - 29)) - .1:
-						create_tile(x, y, Globals.STONE_DIRTY)
+						create_tile(x, y, Globals.ASH)
 					else:
 						create_tile(x, y, Globals.STONE)
 				elif y_global < 93:
