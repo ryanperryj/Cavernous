@@ -27,12 +27,12 @@ _global_script_class_icons={
 [application]
 
 config/name="Cavernous"
-run/main_scene="res://scenes_ui/Title.tscn"
+run/main_scene="res://menus/scenes/Title.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-Globals="*res://scripts/globals.gd"
+Globals="*res://other_scripts/globals.gd"
 
 [display]
 
