@@ -2,16 +2,11 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/worm_tail.png-6d90dad9db52a1d1cc6f5992fe6124d2.stex"
-metadata={
-"vram_texture": false
-}
+valid=false
 
 [deps]
 
 source_file="res://assets/enemies/worm_tail.png"
-dest_files=[ "res://.import/worm_tail.png-6d90dad9db52a1d1cc6f5992fe6124d2.stex" ]
-
 [params]
 
 compress/mode=0

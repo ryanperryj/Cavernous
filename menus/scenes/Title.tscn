@@ -111,6 +111,7 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="pressed" from="ColorRect/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="ColorRect/OptionsButton" to="." method="_on_OptionsButton_pressed"]
 [connection signal="pressed" from="ColorRect/QuitButton" to="." method="_on_QuitButton_pressed"]

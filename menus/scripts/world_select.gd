@@ -75,4 +75,4 @@ func _on_XWorld4Button_pressed():
 	$ColorRect/XWorld4Button.visible = false
 
 func _on_BackButton_pressed():
-	get_tree().change_scene("res://scenes_ui/Title.tscn")
+	get_tree().change_scene("res://menus/scenes/Title.tscn")

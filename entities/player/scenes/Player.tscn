@@ -12,7 +12,6 @@
 [ext_resource path="res://assets/player/animations/fallL.tres" type="Animation" id=10]
 [ext_resource path="res://assets/player/animations/fallR.tres" type="Animation" id=11]
 
-
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 8, 22.5 )
 
@@ -273,4 +272,5 @@ anims/useR = ExtResource( 9 )
 
 [node name="Timer_Break" type="Timer" parent="."]
 one_shot = true
+
 [connection signal="animation_finished" from="AP_Body" to="." method="_on_AP_Body_animation_finished"]
